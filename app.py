@@ -5,8 +5,6 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)   # allow all origins for testing
 
-app = Flask(__name__)
-
 # Your n8n webhook URL
 N8N_WEBHOOK_URL = "https://anuptg.app.n8n.cloud/webhook/GKG"
 
@@ -20,14 +18,12 @@ def proxy_to_n8n():
         response = requests.post(
             N8N_WEBHOOK_URL,
             json=user_data,
-            timeout=300  # 5 min max wait (to match your n8n workflow)
+            timeout=300
         )
 
-        # Try to return n8n JSON response
         try:
             return jsonify(response.json()), response.status_code
         except ValueError:
-            # If not JSON, return raw text
             return response.text, response.status_code
 
     except Exception as e:
